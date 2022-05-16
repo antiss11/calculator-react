@@ -42,6 +42,15 @@ class App extends React.Component {
     this.operatorPress = this.operatorPress.bind(this);
     this.resultPress = this.resultPress.bind(this);
     this.percentagePress = this.percentagePress.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
+  }
+
+  componentDidMount() {
+    document.addEventListener("keydown", this.handleKeyPress);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleKeyPress);
   }
 
   createButton(value) {
@@ -104,6 +113,7 @@ class App extends React.Component {
   }
 
   operatorPress(operator) {
+    operator = operator === "*" ? "×" : operator;
     this.setState((state) => {
       let history = state.clearHistory
         ? `${state.value} ${parse(operator)}`
@@ -132,6 +142,7 @@ class App extends React.Component {
       splitted[0] = this.state.value.toString();
       isNextPressed = true;
     }
+    console.log(splitted);
     let result = 0;
     let prev = splitted[0];
     let operator;
@@ -191,6 +202,23 @@ class App extends React.Component {
       case "%":
         this.percentagePress();
         break;
+    }
+  }
+
+  handleKeyPress(event) {
+    const key = event.key;
+    if (isInt(key)) {
+      this.digitPress(key);
+    } else if (key === "0") {
+      this.zeroPress(key);
+    } else if (key === ".") {
+      this.dotPress();
+    } else if (key === "%") {
+      this.percentagePress();
+    } else if (key === "=" || key === "Enter") {
+      this.resultPress();
+    } else if (key === "/" || key === "*" || key === "-" || key === "+") {
+      this.operatorPress(key);
     }
   }
 
