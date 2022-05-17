@@ -26,4 +26,17 @@ class LargeButton extends React.Component {
   }
 }
 
-export { Button, LargeButton };
+class LongButton extends React.Component {
+  render() {
+    return (
+      <button
+        className="text-4xl row-span1 col-span-5 border-2 border-black"
+        onClick={this.props.onClick}
+      >
+        {this.props.children}
+      </button>
+    );
+  }
+}
+
+export { Button, LargeButton, LongButton };

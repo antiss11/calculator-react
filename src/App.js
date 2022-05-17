@@ -1,23 +1,23 @@
 import logo from "./logo.svg";
 import "./App.css";
 import Big from "big.js";
-import { Button, LargeButton } from "./Button";
+import { Button, LargeButton, LongButton } from "./Button";
 import Display from "./Display";
 import React from "react";
 import parse from "html-react-parser";
 
 const operators = {
   "×": function (a, b) {
-    return Big(a).times(Big(b)).toNumber();
+    return Big(a).times(Big(b)).toNumber().toString();
   },
   "÷": function (a, b) {
-    return Big(a).div(Big(b)).toNumber();
+    return Big(a).div(Big(b)).toNumber().toString();
   },
   "+": function (a, b) {
-    return Big(a).plus(Big(b)).toNumber();
+    return Big(a).plus(Big(b)).toNumber().toString();
   },
   "-": function (a, b) {
-    return Big(a).minus(Big(b)).toNumber();
+    return Big(a).minus(Big(b)).toNumber().toString();
   },
 };
 
@@ -43,6 +43,7 @@ class App extends React.Component {
     this.resultPress = this.resultPress.bind(this);
     this.percentagePress = this.percentagePress.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.backspacePress = this.backspacePress.bind(this);
   }
 
   componentDidMount() {
@@ -63,6 +64,29 @@ class App extends React.Component {
         {parse(value)}
       </LargeButton>
     );
+  }
+
+  createLongButton(value) {
+    return (
+      <LongButton onClick={() => this.handleClick(value)}>{parse(value)}</LongButton>
+    );
+  }
+
+  backspacePress() {
+    this.setState((state) => {
+      const current = state.value;
+      return {
+        value:
+          current === "0"
+            ? "0"
+            : current.length === 1
+            ? "0"
+            : state.clearHistory
+            ? current
+            : current.slice(0, -1),
+        history: state.clearHistory ? null : state.history,
+      };
+    });
   }
 
   digitPress(value) {
@@ -103,11 +127,14 @@ class App extends React.Component {
 
   dotPress(value) {
     this.setState((state) => {
-      if (this.state.value.indexOf(".") !== -1) {
-        return state;
+      if (state.value.indexOf(".") !== -1) {
+        return;
       }
       return {
-        value: state.value + value,
+        value: state.clearHistory ? `0.` : state.value + value,
+        history: state.clearHistory ? null : state.history,
+        clearHistory: false,
+        isNewValue: false,
       };
     });
   }
@@ -135,6 +162,7 @@ class App extends React.Component {
   }
 
   resultPress() {
+    if (!this.state.history) return;
     let splitted = this.state.history.split(" ").concat(this.state.value);
     let isNextPressed = false;
     if (splitted.indexOf("=") !== -1) {
@@ -142,7 +170,6 @@ class App extends React.Component {
       splitted[0] = this.state.value.toString();
       isNextPressed = true;
     }
-    console.log(splitted);
     let result = 0;
     let prev = splitted[0];
     let operator;
@@ -202,6 +229,9 @@ class App extends React.Component {
       case "%":
         this.percentagePress();
         break;
+      case "&#9003;":
+        this.backspacePress();
+        break;
     }
   }
 
@@ -212,13 +242,15 @@ class App extends React.Component {
     } else if (key === "0") {
       this.zeroPress(key);
     } else if (key === ".") {
-      this.dotPress();
+      this.dotPress(key);
     } else if (key === "%") {
       this.percentagePress();
     } else if (key === "=" || key === "Enter") {
       this.resultPress();
     } else if (key === "/" || key === "*" || key === "-" || key === "+") {
       this.operatorPress(key);
+    } else if (key === "Backspace") {
+      this.backspacePress();
     }
   }
 
@@ -226,6 +258,7 @@ class App extends React.Component {
     return (
       <div className="grid grid-cols-5">
         <Display value={this.state.value} history={this.state.history} test={true} />
+        {this.createLongButton("&#9003;")}
         {this.createButton("7")}
         {this.createButton("8")}
         {this.createButton("9")}
