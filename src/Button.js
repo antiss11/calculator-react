@@ -1,42 +1,12 @@
 import React from "react";
 
-class Button extends React.Component {
-  render() {
-    return (
-      <button
-        className="text-4xl row-span-1 col-span-1 border-2 border-black"
-        onClick={this.props.onClick}
-      >
-        {this.props.children}
-      </button>
-    );
-  }
-}
+const Button = (props) => (
+  <button
+    className={"text-4xl bg-white active:bg-red-400 " + props.className}
+    onClick={props.onClick}
+  >
+    {props.children}
+  </button>
+);
 
-class LargeButton extends React.Component {
-  render() {
-    return (
-      <button
-        className="text-4xl row-span-2 col-span-1 border-2 border-black"
-        onClick={this.props.onClick}
-      >
-        {this.props.children}
-      </button>
-    );
-  }
-}
-
-class LongButton extends React.Component {
-  render() {
-    return (
-      <button
-        className="text-4xl row-span1 col-span-5 border-2 border-black"
-        onClick={this.props.onClick}
-      >
-        {this.props.children}
-      </button>
-    );
-  }
-}
-
-export { Button, LargeButton, LongButton };
+export default Button;

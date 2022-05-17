@@ -1,29 +1,10 @@
 import logo from "./logo.svg";
-import "./App.css";
 import Big from "big.js";
-import { Button, LargeButton, LongButton } from "./Button";
+import Button from "./Button";
 import Display from "./Display";
 import React from "react";
 import parse from "html-react-parser";
-
-const operators = {
-  "×": function (a, b) {
-    return Big(a).times(Big(b)).toNumber().toString();
-  },
-  "÷": function (a, b) {
-    return Big(a).div(Big(b)).toNumber().toString();
-  },
-  "+": function (a, b) {
-    return Big(a).plus(Big(b)).toNumber().toString();
-  },
-  "-": function (a, b) {
-    return Big(a).minus(Big(b)).toNumber().toString();
-  },
-};
-
-function isInt(num) {
-  return num % 1 === 0;
-}
+import { operators, isInt } from "./operations";
 
 class App extends React.Component {
   constructor(props) {
@@ -54,21 +35,11 @@ class App extends React.Component {
     document.removeEventListener("keydown", this.handleKeyPress);
   }
 
-  createButton(value) {
-    return <Button onClick={() => this.handleClick(value)}>{parse(value)}</Button>;
-  }
-
-  createLargeButton(value) {
+  createButton(value, classes) {
     return (
-      <LargeButton onClick={() => this.handleClick(value)}>
+      <Button onClick={() => this.handleClick(value)} className={classes}>
         {parse(value)}
-      </LargeButton>
-    );
-  }
-
-  createLongButton(value) {
-    return (
-      <LongButton onClick={() => this.handleClick(value)}>{parse(value)}</LongButton>
+      </Button>
     );
   }
 
@@ -256,24 +227,27 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="grid grid-cols-5">
+      <div className="grid grid-cols-5 h-screen md:mx-10 lg:mx-40 xl:mx-96 gap-0.5 bg-neutral-900/100">
         <Display value={this.state.value} history={this.state.history} test={true} />
-        {this.createLongButton("&#9003;")}
+        {this.createButton(
+          "&#9003;",
+          "row-span1 col-span-5 bg-orange-500 text-white"
+        )}
         {this.createButton("7")}
         {this.createButton("8")}
         {this.createButton("9")}
-        {this.createButton("÷")}
-        {this.createButton("%")}
+        {this.createButton("÷", "bg-orange-500 text-white")}
+        {this.createButton("%", "bg-orange-500 text-white")}
         {this.createButton("4")}
         {this.createButton("5")}
         {this.createButton("6")}
-        {this.createButton("×")}
-        {this.createButton("-")}
+        {this.createButton("×", "bg-orange-500 text-white")}
+        {this.createButton("-", "bg-orange-500 text-white")}
         {this.createButton("1")}
         {this.createButton("2")}
         {this.createButton("3")}
-        {this.createLargeButton("+")}
-        {this.createLargeButton("=")}
+        {this.createButton("+", "row-span-2 col-span-1 bg-orange-500 text-white")}
+        {this.createButton("=", "row-span-2 col-span-1 bg-orange-500 text-white")}
         {this.createButton("0")}
         {this.createButton("00")}
         {this.createButton(".")}
