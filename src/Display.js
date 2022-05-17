@@ -7,7 +7,7 @@ export default class extends React.Component {
 
   render() {
     return (
-      <div className="border-2 border-l-pink-500 p-5 text-8xl col-span-5 flex flex-wrap">
+      <div className="p-5 text-8xl col-span-5 flex flex-wrap bg-neutral-800 text-white">
         <small className="basis-full text-right text-base h-4">
           {this.props.history}
         </small>

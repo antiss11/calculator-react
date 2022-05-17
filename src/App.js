@@ -1,5 +1,3 @@
-import logo from "./logo.svg";
-import Big from "big.js";
 import Button from "./Button";
 import Display from "./Display";
 import React from "react";
@@ -29,6 +27,7 @@ class App extends React.Component {
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyPress);
+    document.body.className = "bg-sky-300";
   }
 
   componentWillUnmount() {
